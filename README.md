@@ -21,37 +21,37 @@ Slowly document all the different recusrive sequences and see what techniques wo
 ### Fibonacci Sequence
 
 Ahh... that classic. Easy to understand, easy to medium to master.
-...
-fibSeq :: Integer -> Integer
-fibSeq 0 = 0
-fibSeq 1 = 1
-fibSeq n = fibSeq (n-1) + fibSeq (n-2)
-...
+````
+	fibSeq :: Integer -> Integer
+	fibSeq 0 = 0
+	fibSeq 1 = 1
+	fibSeq n = fibSeq (n-1) + fibSeq (n-2)
+````
 The basic fibonacci recursive sequences gets really really slow when wanting large values.
 
 Therefor my idea of was:
-...
-fibonacci :: Integer -> Integer
-fibonacci n 
-    | n < 20 = fibSeq n
-    | n < 40 = fibSeq' n18 18 n19 19 n
-    | n < 60 = fibSeq' n38 38 n39 39 n
-    ...
-	...
-	...
-    where
-        n18  = fibonacci 18;  n19  = fibonacci 19
-        n38  = fibonacci 38;  n39  = fibonacci 39
-        ...
+````
+	fibonacci :: Integer -> Integer
+	fibonacci n 
+ 	   | n < 20 = fibSeq n
+	    | n < 40 = fibSeq' n18 18 n19 19 n
+	    | n < 60 = fibSeq' n38 38 n39 39 n
+	    ...
 		...
-       
+		...
+	    where
+	        n18  = fibonacci 18;  n19  = fibonacci 19
+	        n38  = fibonacci 38;  n39  = fibonacci 39
+	        ...
+		...
+ 		      
 
-fibSeq' :: Integer -> Integer -> Integer -> Integer -> Integer -> Integer
-fibSeq' nn8 xx8 nn9 xx9 n
-    | n == xx8 = nn8
-    | n == xx9 = nn9
-fibSeq' nn8 xx8 nn9 xx9 n = (fibSeq' nn8 xx8 nn9 xx9 (n-1)) + (fibSeq' nn8 xx8 nn9 xx9 (n-2))
-...
+	fibSeq' :: Integer -> Integer -> Integer -> Integer -> Integer -> Integer
+	fibSeq' nn8 xx8 nn9 xx9 n
+	    | n == xx8 = nn8
+	    | n == xx9 = nn9
+	fibSeq' nn8 xx8 nn9 xx9 n = (fibSeq' nn8 xx8 nn9 xx9 (n-1)) + (fibSeq' nn8 xx8 nn9 xx9 (n-2))
+````
 #### Looking at
 
 This first draft works like a chram to boost the basic function and giving great speed up to around n = 150
