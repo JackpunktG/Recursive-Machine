@@ -21,7 +21,7 @@ executable Recursive-Machine
     -- other-modules:
     -- other-extensions:
     build-depends:    base ^>=4.18.3.0,
-					  hashable,
-					  unordered-containers
+                      hashable,
+                      unordered-containers
     hs-source-dirs:   .
     default-language: GHC2021
