@@ -54,7 +54,7 @@ Therefor my idea of was:
 ````
 #### Looking at
 
-This first draft works like a chram to boost the basic function and giving great speed up to around n = 150
+This first draft works like a chram to boost the basic function and giving great speed up to around n = 200
 
 - Want to work out a way to automatically increase the "| n <" as n increases, with adding addition where cases. Using where so they don't need to be again calculated each time.
 - Optimal gap between n values to just to the next one. Would like to add a automised way to increase test values of the gab and see which is optimal *Probably bigger at the start and then getting smaller. But what is the formula??*
