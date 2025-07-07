@@ -1,9 +1,44 @@
 module Sequences.Fibonacci
-( fibonacci 
+( fibonacci,
+  fibArray,
+  fibHashMap,
+  fibSeq
 ) where
 
+import Data.Array
+import qualified Data.HashMap.Strict as HM
+import Data.HashMap.Strict (HashMap)
+import Control.Monad.State
 
-fibonacci :: Integer -> Integer
+
+
+fibHashMap :: Int -> State (HashMap Int Integer) Integer
+fibHashMap 0 = return 0
+fibHashMap 1 = return 1
+fibHashMap n = do
+    memo <- get  --get gets the current state of the HashMap and binds it to memo
+    case HM.lookup n memo of
+        Just value -> return value  -- if value exists return it
+        Nothing -> do
+            a <- fibHashMap (n - 1)
+            b <- fibHashMap (n - 2)
+            let result = a + b
+            modify (HM.insert n result)  -- update the HashMap in state
+            return result
+            
+            
+-- Array memoization of Fibonacci
+fibArray :: Int -> Array Int Integer
+fibArray n = array (0, n) $  
+    [ (i, fib i) | i <- [0..n] ]
+  where
+    fib 0 = 0
+    fib 1 = 1
+    fib i = fibArray n ! (i - 1) + fibArray n ! (i - 2)
+
+
+-- my "improved" self-recursive function
+fibonacci :: Int -> Integer
 fibonacci n 
     | n < 20 = fibSeq n
     | n < 40 = fibSeq' n18 18 n19 19 n
@@ -29,14 +64,14 @@ fibonacci n
         n198 = fibonacci 198; n199 = fibonacci 199
        
 
-fibSeq' :: Integer -> Integer -> Integer -> Integer -> Integer -> Integer
+fibSeq' :: Integer -> Int -> Integer -> Int -> Int -> Integer
 fibSeq' nn8 xx8 nn9 xx9 n
     | n == xx8 = nn8
     | n == xx9 = nn9
 fibSeq' nn8 xx8 nn9 xx9 n = (fibSeq' nn8 xx8 nn9 xx9 (n-1)) + (fibSeq' nn8 xx8 nn9 xx9 (n-2))
   
  
-fibSeq :: Integer -> Integer
+fibSeq :: Int -> Integer
 fibSeq 0 = 0
 fibSeq 1 = 1
 fibSeq n = fibSeq (n-1) + fibSeq (n-2)
