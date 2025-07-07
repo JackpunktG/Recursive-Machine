@@ -32,8 +32,8 @@ The basic fibonacci recursive sequences gets really really slow when wanting lar
 Therefor my idea of was:
 ````
 	fibonacci :: Integer -> Integer
-	fibonacci n 
- 	   | n < 20 = fibSeq n
+	fibonacci n
+            | n < 20 = fibSeq n
 	    | n < 40 = fibSeq' n18 18 n19 19 n
 	    | n < 60 = fibSeq' n38 38 n39 39 n
 	    ...
