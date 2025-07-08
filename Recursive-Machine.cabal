@@ -24,6 +24,8 @@ executable Recursive-Machine
 	                  mtl,
 	                  array,
                       hashable,
-                      unordered-containers
+                      unordered-containers,
+					  time,
+					  deepseq
     hs-source-dirs:   .
     default-language: GHC2021
