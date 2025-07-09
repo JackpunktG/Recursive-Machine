@@ -18,10 +18,14 @@ common warnings
 executable Recursive-Machine
     import:           warnings
     main-is:          Main.hs
-    -- other-modules:
+    -- other-modules: Sequences.Fibonacci
     -- other-extensions:
-    build-depends:    base ^>=4.18.3.0,
+    build-depends:    base >= 4.7 && < 5,
+	                  mtl,
+	                  array,
                       hashable,
-                      unordered-containers
+                      unordered-containers,
+					  time,
+					  deepseq
     hs-source-dirs:   .
     default-language: GHC2021
