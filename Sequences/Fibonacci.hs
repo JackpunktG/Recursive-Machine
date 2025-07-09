@@ -45,7 +45,7 @@ fibArray n = arr
 fibZip :: [Integer]
 fibZip = 0 : 1 : zipWith (+) fibZip (tail fibZip)
 
--- my "boosted" self-recursive function
+-- "boosted" self-recursive function
 fibboosted :: Int -> Integer
 fibboosted n
   | n < 2 = fromIntegral n

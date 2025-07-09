@@ -10,14 +10,7 @@ import Data.Array
 import Numeric
 import Control.DeepSeq
 
-{-
-dispatch :: [(String, [String] -> IO ())]
-dispatch = [ ("Hashmap", setHashMap)
-           , ("Array", setArray)
-           , ("Boosted", boosted)
-           , ("Basic", basic)
-           ]
--}
+
 
 main :: IO ()
 main = do

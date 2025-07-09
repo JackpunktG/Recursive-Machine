@@ -9,48 +9,47 @@ Not quite there yet, in terms of skill set - So then I started to experiment wit
 Has this been done before?? *Probably, yes* 
 Is there a better way?? **Almost definately!!**
 
+Now after doing some research, i've dived into the world of memoization... head first.
+
+
+
 However, as I'm still new to programming it sounded like a fun little project for me to work on whilst doing my studies.
 
 
 ## Goal
 
 To start to experiment with different ways to improve recursive functions
-Slowly document all the different recusrive sequences and see what techniques work for optimising them. Are that going to be the same?? *I know know* :) 
+Slowly, but god dam surely document all the different recusrive sequences and see what techniques work for optimising them. Are that going to be the same?? *I know don't* :) 
+
+I'm still intrested in the optimal "boosting" (#fibboost-id) funtion, however only having to sum up any part one, well lets just say that save some BIG TIME!!
+Now that the flood gates are opened, I asked the question. Which is the most optimial way. So far I've intergrated Hashmaps, Array and ZipWith im a memoization way. More research needed, and want to test them out all out!
+
+So with each sequence come the set of questions
+- how many ways are there to do memoization
+- which is quicker
+	- for smaller values
+	- as the number gets bigger
+- and tricks or tips i learn! always always
 
 
 ### Fibonacci Sequence
 
-Ahh... that classic. Easy to understand, easy to medium to master.
-````
-	fibSeq :: Integer -> Integer
-	fibSeq 0 = 0
-	fibSeq 1 = 1
-	fibSeq n = fibSeq (n-1) + fibSeq (n-2)
-````
-The basic fibonacci recursive sequences gets really really slow when wanting large values.
-
+<a name="fibboost-id" />
 Therefor my idea of was:
 ````
-	fibonacci :: Integer -> Integer
-	fibonacci n
-            | n < 20 = fibSeq n
-	    | n < 40 = fibSeq' n18 18 n19 19 n
-	    | n < 60 = fibSeq' n38 38 n39 39 n
-	    ...
-		...
-		...
-	    where
-	        n18  = fibonacci 18;  n19  = fibonacci 19
-	        n38  = fibonacci 38;  n39  = fibonacci 39
-	        ...
-		...
- 		      
+	-- "boosted" self-recursive function
+	fibboosted :: Int -> Integer
+	fibboosted n
+	| n < 2 = fromIntegral n
+	| otherwise = fibSeq' (n - mod n 20) (fibboosted (n - mod n 20)) (fibboosted (n - mod n 20 + 1)) n
 
-	fibSeq' :: Integer -> Integer -> Integer -> Integer -> Integer -> Integer
-	fibSeq' nn8 xx8 nn9 xx9 n
-	    | n == xx8 = nn8
-	    | n == xx9 = nn9
-	fibSeq' nn8 xx8 nn9 xx9 n = (fibSeq' nn8 xx8 nn9 xx9 (n-1)) + (fibSeq' nn8 xx8 nn9 xx9 (n-2))
+       
+	-- helper function to build the pairs dynamically with the boosted recursive function
+	fibSeq' :: Int -> Integer -> Integer -> Int -> Integer
+	fibSeq' k fk1 fk2 n
+	| k == n    = fk1
+	| k + 1 == n = fk2
+	| otherwise = fibSeq' (k + 1) fk2 (fk1 + fk2) n 
 ````
 #### Looking at
 
