@@ -36,6 +36,7 @@ So with each sequence come the set of questions
 
 <a name="fibboost-id" />
 Therefor my idea of was:
+
 ````
 	-- "boosted" self-recursive function
 	fibboosted :: Int -> Integer
@@ -51,6 +52,7 @@ Therefor my idea of was:
 	| k + 1 == n = fk2
 	| otherwise = fibSeq' (k + 1) fk2 (fk1 + fk2) n 
 ````
+
 #### Looking at
 
 This first draft works like a chram to boost the basic function and giving great speed up to around n = 200
