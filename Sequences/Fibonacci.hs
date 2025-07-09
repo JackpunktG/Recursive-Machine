@@ -1,8 +1,9 @@
 module Sequences.Fibonacci
-( fibonacci,
+( fibboosted,
   fibArray,
   fibHashMap,
-  fibSeq
+  fibSeq,
+  fibZip
 ) where
 
 import Data.Array
@@ -31,48 +32,35 @@ fibHashMap n = do
             
 -- Array memoization of Fibonacci
 fibArray :: Int -> Array Int Integer
-fibArray n = array (0, n) $  
-    [ (i, fib i) | i <- [0..n] ]
+fibArray n = arr
   where
+    arr = array (0, n) [(i, fib i) | i <- [0..n]]
     fib 0 = 0
     fib 1 = 1
-    fib i = fibArray n ! (i - 1) + fibArray n ! (i - 2)
+    fib i = arr ! (i - 1) + arr ! (i - 2)
+    
+    
+    
+-- Ziptail memoization 
+fibZip :: [Integer]
+fibZip = 0 : 1 : zipWith (+) fibZip (tail fibZip)
 
+-- my "boosted" self-recursive function
+fibboosted :: Int -> Integer
+fibboosted n
+  | n < 2 = fromIntegral n
+  | otherwise = fibSeq' (n - mod n 20) (fibboosted (n - mod n 20)) (fibboosted (n - mod n 20 + 1)) n
 
--- my "improved" self-recursive function
-fibonacci :: Int -> Integer
-fibonacci n 
-    | n < 20 = fibSeq n
-    | n < 40 = fibSeq' n18 18 n19 19 n
-    | n < 60 = fibSeq' n38 38 n39 39 n
-    | n < 80 = fibSeq' n58 58 n59 59 n
-    | n < 100 = fibSeq' n78 78 n79 79 n
-    | n < 120 = fibSeq' n98 98 n99 99 n
-    | n < 140 = fibSeq' n118 118 n119 119 n
-    | n < 160 = fibSeq' n138 138 n139 139 n
-    | n < 180 = fibSeq' n158 158 n159 159 n
-    | n < 200 = fibSeq' n178 178 n179 179 n
-    | n >= 200 = fibSeq' n198 198 n199 199 n
-    where
-        n18  = fibonacci 18;  n19  = fibonacci 19
-        n38  = fibonacci 38;  n39  = fibonacci 39
-        n58  = fibonacci 58;  n59  = fibonacci 59
-        n78  = fibonacci 78;  n79  = fibonacci 79
-        n98  = fibonacci 98;  n99  = fibonacci 99
-        n118 = fibonacci 118; n119 = fibonacci 119
-        n138 = fibonacci 138; n139 = fibonacci 139
-        n158 = fibonacci 158; n159 = fibonacci 159
-        n178 = fibonacci 178; n179 = fibonacci 179
-        n198 = fibonacci 198; n199 = fibonacci 199
        
-
-fibSeq' :: Integer -> Int -> Integer -> Int -> Int -> Integer
-fibSeq' nn8 xx8 nn9 xx9 n
-    | n == xx8 = nn8
-    | n == xx9 = nn9
-fibSeq' nn8 xx8 nn9 xx9 n = (fibSeq' nn8 xx8 nn9 xx9 (n-1)) + (fibSeq' nn8 xx8 nn9 xx9 (n-2))
+-- helper function to build the pairs dynamically with the boosted recursive function
+fibSeq' :: Int -> Integer -> Integer -> Int -> Integer
+fibSeq' k fk1 fk2 n
+  | k == n    = fk1
+  | k + 1 == n = fk2
+  | otherwise = fibSeq' (k + 1) fk2 (fk1 + fk2) n 
   
- 
+  
+--most basic Fibonnaci recursive function
 fibSeq :: Int -> Integer
 fibSeq 0 = 0
 fibSeq 1 = 1

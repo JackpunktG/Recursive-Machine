@@ -18,7 +18,7 @@ common warnings
 executable Recursive-Machine
     import:           warnings
     main-is:          Main.hs
-    -- other-modules:
+    -- other-modules: Sequences.Fibonacci
     -- other-extensions:
     build-depends:    base >= 4.7 && < 5,
 	                  mtl,
