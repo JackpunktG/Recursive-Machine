@@ -38,24 +38,31 @@ So with each sequence come the set of questions
 Therefor my idea of was:
 
 ````
-	-- "boosted" self-recursive function
 	fibboosted :: Int -> Integer
 	fibboosted n
-	| n < 2 = fromIntegral n
-	| otherwise = fibSeq' (n - mod n 20) (fibboosted (n - mod n 20)) (fibboosted (n - mod n 20 + 1)) n
-
-       
-	-- helper function to build the pairs dynamically with the boosted recursive function
-	fibSeq' :: Int -> Integer -> Integer -> Int -> Integer
-	fibSeq' k fk1 fk2 n
-	| k == n    = fk1
-	| k + 1 == n = fk2
-	| otherwise = fibSeq' (k + 1) fk2 (fk1 + fk2) n 
+	| n < 20    = fibSeq n
+	| n < 40    = fibSeq' n18 18 n19 19 n
+	| n < 60    = fibSeq' n38 38 n39 39 n
+	| n < 80    = fibSeq' n58 58 n59 59 n
+	| n < 100   = fibSeq' n78 78 n79 79 n
+	...
+	  where
+		n18 = fibboosted 18; n19 = fibboosted 19
+		n38 = fibboosted 38; n39 = fibboosted 39
+		n58 = fibboosted 58; n59 = fibboosted 59
+		n78 = fibboosted 78; n79 = fibboosted 79
+		...
+		
+	fibSeq' :: Integer -> Int -> Integer -> Int -> Int -> Integer
+	fibSeq' nn8 xx8 nn9 xx9 n
+		| n == xx8 = nn8
+		| n == xx9 = nn9
+	fibSeq' nn8 xx8 nn9 xx9 n = (fibSeq' nn8 xx8 nn9 xx9 (n-1)) + (fibSeq' nn8 xx8 nn9 xx9 (n-2))
 ````
 
 #### Looking at
 
-This first draft works like a chram to boost the basic function and giving great speed up to around n = 200
+This first draft works like a chram to boost the basic function and giving instant speeds up to n = 10000 (the highest ive gone as i dont nee
 
 - Want to work out a way to automatically increase the "| n <" as n increases, with adding addition where cases. Using where so they don't need to be again calculated each time.
 - Optimal gap between n values to just to the next one. Would like to add a automised way to increase test values of the gab and see which is optimal *Probably bigger at the start and then getting smaller. But what is the formula??*

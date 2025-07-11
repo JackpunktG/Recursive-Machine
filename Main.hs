@@ -82,15 +82,15 @@ loopBoosted :: Int -> Int -> String -> IO ()
 loopBoosted upper lower fileName
     | upper == lower = do 
         start <- getCurrentTime
-        let result = fibboosted lower
+        let result = freshFibBoosted lower
         result `deepseq` return () --forces evaluation
         end <- getCurrentTime
         let diff = realToFrac (diffUTCTime end start) :: Float
         appendFile fileName (show (lower+1) ++ "," ++ show result ++ "," ++  (showFFloat (Just 8) diff "") ++ "\n")
     | otherwise = do
         start <- getCurrentTime
-        let result = fibboosted upper
-        result `deepseq` return () --forces evaluation
+        let result = freshFibBoosted upper
+        result `deepseq` return () --forces evaluation!
         end <- getCurrentTime
         let diff = realToFrac (diffUTCTime end start) :: Float
         appendFile fileName (show (upper+1) ++ "," ++ show result ++ "," ++ (showFFloat (Just 8) diff "") ++ "\n")
@@ -102,7 +102,7 @@ loopHashMap upper lower fileName
     | lower == upper = do 
         start <- getCurrentTime
         let result = evalState (fibHashMap lower) HM.empty
-        result `deepseq` return () --forces evaluation
+        result `deepseq` return () --forces evaluation!
         end <- getCurrentTime
         let diff = realToFrac (diffUTCTime end start) :: Float
         appendFile fileName (show (lower+1) ++ "," ++ show result ++ "," ++  (showFFloat (Just 8) diff "") ++ "\n")
