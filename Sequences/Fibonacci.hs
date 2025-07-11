@@ -1,5 +1,5 @@
 module Sequences.Fibonacci
-( freshFibBoosted,
+( fibboosted,
   fibArray,
   fibHashMap,
   fibSeq,
@@ -59,12 +59,6 @@ fibSeq' nn8 xx8 nn9 xx9 n
     | n == xx8 = nn8
     | n == xx9 = nn9
 fibSeq' nn8 xx8 nn9 xx9 n = (fibSeq' nn8 xx8 nn9 xx9 (n-1)) + (fibSeq' nn8 xx8 nn9 xx9 (n-2))
-
-
-{-# NOINLINE freshFibBoosted #-}
-freshFibBoosted :: Int -> Integer
-freshFibBoosted n = unsafePerformIO $ do
-  return $ fibboosted n
 
 
 -- "boosted" self-recursive function - would love to find a ways to automatically generate this ;)

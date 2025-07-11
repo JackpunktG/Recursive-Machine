@@ -1,18 +1,10 @@
-module Main where
+--runhaskell --ghc-arg=-package --ghc-arg=time --ghc-arg=-package --ghc-arg=deepseq --ghc-arg=-package --ghc-arg=process --ghc-arg=-package --ghc-arg=array --ghc-arg=-package --ghc-arg=unordered-containers --ghc-arg=-package --ghc-arg=mtl FibMain.hs
 
-import Sequences.Fibonacci
+import Data.Char
 import System.Environment
-import Control.Exception
-import Data.Time.Clock
-import Control.Monad.State
-import qualified Data.HashMap.Strict as HM
-import Data.Array
-import Numeric
-import Control.DeepSeq
+import System.Process
 
 
-
-main :: IO ()
 main = do
     putStrLn "Hashmap upper bound:"
     hashUpper <- getLine
@@ -47,111 +39,42 @@ main = do
     putStrLn "Filename?"
     fileName <- getLine 
     
-    writeFile fileName ("Hasshmap memoization test from " ++ show hashU ++ " to " ++ show hashL ++ "\n")
-    loopHashMap (hashU-1) (hashL-1) fileName
-    appendFile fileName ("\n\nArray memoization Test to " ++ show arrayU ++ " to " ++ show arrayL ++ "\n")
-    loopArray (arrayU-1) (arrayL-1) fileName
-    appendFile fileName ("\n\nList memoization Test to " ++ show listU ++ " to " ++ show listL ++ "\n")
-    loopList (listU-1) (listL-1) fileName
-    appendFile fileName ("\n\nBoosted recursive function Test to " ++ show boostU ++ " to " ++ show boostL ++ "\n")
-    loopBoosted (boostU-1) (boostL-1) fileName
-    appendFile fileName ("\n\nBasic recursive function Test to " ++ show basicU ++ " to " ++ show basicL ++  "\n") 
-    loopFib (basicU-1) (basicL-1) fileName
-
-
-loopFib :: Int -> Int -> String -> IO ()
-loopFib upper lower fileName 
-    | upper == lower = do
-        start <- getCurrentTime
-        let result = fibSeq lower
-        result `deepseq` return () --forces evaluation
-        end <- getCurrentTime
-        let diff = realToFrac (diffUTCTime end start) :: Float
-        appendFile fileName (show (lower+1) ++ "," ++ show result ++ "," ++  (showFFloat (Just 8) diff "") ++ "\n")
-    | otherwise = do
-        start <- getCurrentTime
-        let result = fibSeq upper
-        result `deepseq` return () --forces evaluation
-        end <- getCurrentTime
-        let diff = realToFrac (diffUTCTime end start) :: Float
-        appendFile fileName (show (upper+1) ++ "," ++ show result ++ "," ++ (showFFloat (Just 8) diff "") ++ "\n")
-        loopFib (upper-1) lower fileName
-    
-
-loopBoosted :: Int -> Int -> String -> IO ()
-loopBoosted upper lower fileName
-    | upper == lower = do 
-        start <- getCurrentTime
-        let result = freshFibBoosted lower
-        result `deepseq` return () --forces evaluation
-        end <- getCurrentTime
-        let diff = realToFrac (diffUTCTime end start) :: Float
-        appendFile fileName (show (lower+1) ++ "," ++ show result ++ "," ++  (showFFloat (Just 8) diff "") ++ "\n")
-    | otherwise = do
-        start <- getCurrentTime
-        let result = freshFibBoosted upper
-        result `deepseq` return () --forces evaluation!
-        end <- getCurrentTime
-        let diff = realToFrac (diffUTCTime end start) :: Float
-        appendFile fileName (show (upper+1) ++ "," ++ show result ++ "," ++ (showFFloat (Just 8) diff "") ++ "\n")
-        loopBoosted (upper-1) lower fileName
-   
-    
-loopHashMap :: Int -> Int -> String -> IO ()
-loopHashMap upper lower fileName 
-    | lower == upper = do 
-        start <- getCurrentTime
-        let result = evalState (fibHashMap lower) HM.empty
-        result `deepseq` return () --forces evaluation!
-        end <- getCurrentTime
-        let diff = realToFrac (diffUTCTime end start) :: Float
-        appendFile fileName (show (lower+1) ++ "," ++ show result ++ "," ++  (showFFloat (Just 8) diff "") ++ "\n")
-    | otherwise = do
-        start <- getCurrentTime
-        let result = evalState (fibHashMap upper) HM.empty
-        result `deepseq` return () --forces evaluation
-        end <- getCurrentTime
-        let diff = realToFrac (diffUTCTime end start) :: Float
-        appendFile fileName (show (upper+1) ++ "," ++ show result ++ "," ++ (showFFloat (Just 8) diff "") ++ "\n")
-        loopHashMap (upper-1) lower fileName
+    writeFile fileName ("Hasshmap memoization test from " ++ show hashL ++ " to " ++ show hashU ++ "\n")
+    loopTest "hashmap" (hashU-1) (hashL-1) fileName
+    appendFile fileName ("\n\nArray memoization Test to " ++ show arrayL ++ " to " ++ show arrayU ++ "\n")
+    loopTest "array" (arrayU-1) (arrayL-1) fileName
+    appendFile fileName ("\n\nList memoization Test to " ++ show listL ++ " to " ++ show listU ++ "\n")
+    loopTest "list" (listU-1) (listL-1) fileName
+    appendFile fileName ("\n\nBoosted recursive function Test to " ++ show boostL ++ " to " ++ show boostU ++ "\n")
+    loopTest "boosted" (boostU-1) (boostL-1) fileName
+    appendFile fileName ("\n\nBasic recursive function Test to " ++ show basicL ++ " to " ++ show basicU ++  "\n")
+    loopTest "basic" (basicU-1) (basicL-1) fileName
     
     
-loopArray :: Int -> Int -> String -> IO()
-loopArray upper lower fileName 
-    | upper == lower = do
-        start <- getCurrentTime
-        let result = (fibArray lower) ! lower
-        result `deepseq` return () --forces evaluation
-        end <- getCurrentTime
-        let diff = realToFrac (diffUTCTime end start) :: Float
-        appendFile fileName (show (lower+1) ++ "," ++ show result ++ "," ++  (showFFloat (Just 8) diff "") ++ "\n")
+    
+loopTest :: String -> Int -> Int -> String -> IO String
+loopTest function upper lower fileName 
+    | upper == lower = runTest (function ++ " " ++ fileName ++ " " ++ show lower) ghcArgs
     | otherwise = do
-        start <- getCurrentTime
-        let resultAraay = fibArray upper
-            result = resultAraay ! upper
-        result `deepseq` return () --forces evaluation
-        end <- getCurrentTime
-        let diff = realToFrac (diffUTCTime end start) :: Float
-        appendFile fileName (show (upper+1) ++ "," ++ show result ++ "," ++  (showFFloat (Just 8) diff "") ++ "\n")
-        loopArray (upper-1) lower fileName
+        runTest (function ++ " " ++ fileName ++ " " ++ show lower) ghcArgs 
+        loopTest function upper (lower+1) fileName
+    
+runTest :: String -> [String] -> IO String
+runTest str args = readProcess "runhaskell" (args ++ words str) ""
 
-
-loopList :: Int -> Int -> String -> IO()
-loopList upper lower fileName
-    | upper == lower = do
-        start <- getCurrentTime
-        let result = fibZip !! lower
-        result `deepseq` return () --forces evaluation
-        end <- getCurrentTime
-        let diff = realToFrac (diffUTCTime end start) :: Float
-        appendFile fileName (show (lower+1) ++ "," ++ show result ++ "," ++  (showFFloat (Just 8) diff "") ++ "\n")
-    | otherwise = do
-        start <- getCurrentTime
-        let result = fibZip !! upper
-        result `deepseq` return () --forces evaluation
-        end <- getCurrentTime
-        let diff = realToFrac (diffUTCTime end start) :: Float
-        appendFile fileName (show (upper + 1) ++ "," ++ show result ++ "," ++  (showFFloat (Just 8) diff "") ++ "\n")
-        loopList (upper-1) lower fileName
-
-
+ghcArgs :: [String]
+ghcArgs =
+  [ "--ghc-arg=-package"
+  , "--ghc-arg=time"
+  , "--ghc-arg=-package"
+  , "--ghc-arg=deepseq"
+  , "--ghc-arg=-package"
+  , "--ghc-arg=process"
+  , "--ghc-arg=-package"
+  , "--ghc-arg=array"
+  , "--ghc-arg=-package"
+  , "--ghc-arg=unordered-containers"
+  , "--ghc-arg=-package"
+  , "--ghc-arg=mtl"
+  , "FibMain.hs"
+  ]
