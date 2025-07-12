@@ -11,10 +11,13 @@ Is there a better way?? **Almost definately!!**
 
 Now after doing some research, i've dived into the world of memoization... head first.
 
-
-
 However, as I'm still new to programming it sounded like a fun little project for me to work on whilst doing my studies.
 
+
+## Sub-routine
+
+Due to Haskell's laziness, the basic loops where not giving accurate times, as after calculating the first number it was save and share this value with future calls. 
+So I got around this by creating each call a subroutine. Completely issolating the calculation and giving a accurate time per value. Obvs... super slower calling each check a subroutine, but will just take number then in 100 difference or more as they get bigger 
 
 ## Goal
 
@@ -62,7 +65,7 @@ Therefor my idea of was:
 
 #### Looking at
 
-This first draft works like a chram to boost the basic function and giving instant speeds up to n = 10000 (the highest ive gone as i dont nee
+This first draft works like a chram to boost the basic function and giving sub second speeds up to n = ~120, then starts to get slow fast - Whereas the basic fibonacci function can only do sub second up to n = ~30
 
 - Want to work out a way to automatically increase the "| n <" as n increases, with adding addition where cases. Using where so they don't need to be again calculated each time.
 - Optimal gap between n values to just to the next one. Would like to add a automised way to increase test values of the gab and see which is optimal *Probably bigger at the start and then getting smaller. But what is the formula??*

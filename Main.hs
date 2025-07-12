@@ -26,6 +26,8 @@ main = do
     basicUpper <- getLine 
     putStrLn "Basic lower bound:"
     basicLower <- getLine
+    putStrLn "test jump"
+    jumpSt <- getLine
     let hashU = read hashUpper :: Int
         hashL = read hashLower :: Int
         listU = read listUpper :: Int
@@ -36,28 +38,29 @@ main = do
         boostL = read boostLower :: Int
         basicU = read basicUpper :: Int
         basicL = read basicLower :: Int
+        jump = read jumpSt :: Int
     putStrLn "Filename?"
     fileName <- getLine 
     
     writeFile fileName ("Hasshmap memoization test from " ++ show hashL ++ " to " ++ show hashU ++ "\n")
-    loopTest "hashmap" (hashU-1) (hashL-1) fileName
+    loopTest "hashmap" (hashU-1) (hashL-1) fileName jump
     appendFile fileName ("\n\nArray memoization Test to " ++ show arrayL ++ " to " ++ show arrayU ++ "\n")
-    loopTest "array" (arrayU-1) (arrayL-1) fileName
+    loopTest "array" (arrayU-1) (arrayL-1) fileName jump
     appendFile fileName ("\n\nList memoization Test to " ++ show listL ++ " to " ++ show listU ++ "\n")
-    loopTest "list" (listU-1) (listL-1) fileName
+    loopTest "list" (listU-1) (listL-1) fileName jump
     appendFile fileName ("\n\nBoosted recursive function Test to " ++ show boostL ++ " to " ++ show boostU ++ "\n")
-    loopTest "boosted" (boostU-1) (boostL-1) fileName
+    loopTest "boosted" (boostU-1) (boostL-1) fileName jump
     appendFile fileName ("\n\nBasic recursive function Test to " ++ show basicL ++ " to " ++ show basicU ++  "\n")
-    loopTest "basic" (basicU-1) (basicL-1) fileName
+    loopTest "basic" (basicU-1) (basicL-1) fileName jump
     
     
     
-loopTest :: String -> Int -> Int -> String -> IO String
-loopTest function upper lower fileName 
-    | upper == lower = runTest (function ++ " " ++ fileName ++ " " ++ show lower) ghcArgs
+loopTest :: String -> Int -> Int -> String -> Int -> IO String
+loopTest function upper lower fileName jump
+    | upper == lower || upper < lower = runTest (function ++ " " ++ fileName ++ " " ++ show lower) ghcArgs
     | otherwise = do
         runTest (function ++ " " ++ fileName ++ " " ++ show lower) ghcArgs 
-        loopTest function upper (lower+1) fileName
+        loopTest function upper (lower + (jump-1)) fileName jump
     
 runTest :: String -> [String] -> IO String
 runTest str args = readProcess "runhaskell" (args ++ words str) ""
