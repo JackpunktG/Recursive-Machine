@@ -60,7 +60,7 @@ loopTest function upper lower fileName jump
     | upper == lower || upper < lower = runTest (function ++ " " ++ fileName ++ " " ++ show lower) ghcArgs
     | otherwise = do
         runTest (function ++ " " ++ fileName ++ " " ++ show lower) ghcArgs 
-        loopTest function upper (lower + (jump-1)) fileName jump
+        loopTest function upper (lower + jump) fileName jump
     
 runTest :: String -> [String] -> IO String
 runTest str args = readProcess "runhaskell" (args ++ words str) ""
