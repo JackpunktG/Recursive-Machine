@@ -40,10 +40,11 @@ So with each sequence come the set of questions
 
 #### Memoization
 
-Array = Red
-Hashmap = Purple
-List = Green
-* Started the testing at n = 50000 (as all basically instance before then) to 300000 in jumps of +200. Hence the somewhat sporadic data points at the end.
+- Array = Red
+- Hashmap = Purple
+- List = Green
+
+Started the testing at n = 50000 (as all basically instance before then) to 300000 in jumps of +200. Hence the somewhat sporadic data points at the end.
 
 ![1](/Images/Fib_ArrayHashmapList1.png)
  
