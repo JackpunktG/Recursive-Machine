@@ -45,11 +45,11 @@ Hashmap = Purple
 List = Green
 * Started the testing at n = 50000 (as all basically instance before then) to 300000 in jumps of +200. Hence the somewhat sporadic data points at the end.
 
-!(/Images/Fib_ArrayHashmapList1.png)
+![1](/Images/Fib_ArrayHashmapList1.png)
  
-!(/Images/Fib_ArrayHashmapList2.png) 
+![2](/Images/Fib_ArrayHashmapList2.png) 
 
-!(/Images/Fib_ArrayHashmapList3.png) 
+![3](/Images/Fib_ArrayHashmapList3.png) 
 
 As we can see all are really quick, but Hashmap is by far the slowest, with List and Array being pretty close. However towards the best of the test, can definately feel my computer starting to tank, however it does seem that all 3 have a slightly different curve, with List winning the race!
 
@@ -58,9 +58,9 @@ Also want to give them a try with some multithreading to see how each benifits f
 
 #### Non-Memoization
 
-!(/Images/Fib_BasicBoosted1.png)
+![4](/Images/Fib_BasicBoosted1.png)
 
-!(/Images/Fib_BasicBoosted2.png)
+![5](/Images/Fib_BasicBoosted2.png)
 
 As we can see if the Boosted function (orange) starts off well, but then gets extremly slow exponentally.
 
